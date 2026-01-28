@@ -1,8 +1,21 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
 
 const startBtn = document.querySelector('[data-start]');
+const datetimeInput = document.querySelector('#datetime-picker');
+
+const timerElements = {
+  days: document.querySelector('[data-days]'),
+  hours: document.querySelector('[data-hours]'),
+  minutes: document.querySelector('[data-minutes]'),
+  seconds: document.querySelector('[data-seconds]'),
+};
+
 let userSelectedDate = 0;
+
+startBtn.setAttribute('disabled', '');
 
 const options = {
   enableTime: true,
@@ -12,7 +25,11 @@ const options = {
   onClose(selectedDates) {
     userSelectedDate = selectedDates[0].getTime();
     if (userSelectedDate <= Date.now()) {
-      window.alert('Please choose a date in the future');
+      iziToast.error({
+        title: 'Error',
+        message: 'Please choose a date in the future',
+        position: 'topRight',
+      });
       startBtn.setAttribute('disabled', '');
     } else {
       startBtn.removeAttribute('disabled');
@@ -46,17 +63,14 @@ function addLeadingZero(value) {
 }
 
 function updateTimer({ days, hours, minutes, seconds }) {
-  document.querySelector('[data-days]').textContent = addLeadingZero(days);
-  document.querySelector('[data-hours]').textContent = addLeadingZero(hours);
-  document.querySelector('[data-minutes]').textContent =
-    addLeadingZero(minutes);
-  document.querySelector('[data-seconds]').textContent =
-    addLeadingZero(seconds);
+  timerElements.days.textContent = addLeadingZero(days);
+  timerElements.hours.textContent = addLeadingZero(hours);
+  timerElements.minutes.textContent = addLeadingZero(minutes);
+  timerElements.seconds.textContent = addLeadingZero(seconds);
 }
 
 startBtn.addEventListener('click', () => {
   startBtn.setAttribute('disabled', '');
-  const datetimeInput = document.querySelector('#datetime-picker');
   datetimeInput.setAttribute('disabled', true);
 
   const timerInterval = setInterval(() => {
@@ -66,7 +80,6 @@ startBtn.addEventListener('click', () => {
     if (timeDifference <= 0) {
       clearInterval(timerInterval);
       updateTimer({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-      startBtn.removeAttribute('disabled');
       datetimeInput.removeAttribute('disabled');
       return;
     }
