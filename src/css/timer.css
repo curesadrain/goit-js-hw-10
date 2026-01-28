@@ -7,6 +7,10 @@
   border: 1px solid #808080;
 }
 
+#datetime-picker:disabled {
+  cursor: not-allowed;
+}
+
 .date-selector {
   display: flex;
   gap: 8px;

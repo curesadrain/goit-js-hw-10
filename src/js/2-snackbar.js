@@ -1,17 +1,14 @@
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
-const submitBtn = document.querySelector('#submit-btn');
+const form = document.querySelector('.form');
 
-submitBtn.addEventListener('click', event => {
+form.addEventListener('submit', event => {
   event.preventDefault();
 
-  const delayInput = Number(document.querySelector('#delay-input').value);
-  const selectedValue = document.querySelector(
-    'input[name="state"]:checked'
-  ).value;
-  document.querySelector('.form').reset();
-
+  const delayInput = Number(form.querySelector('input[name="delay"]').value);
+  const selectedValue = form.querySelector('input[name="state"]:checked').value;
+  form.reset();
   const options = {
     timeout: delayInput,
     state: selectedValue,
